@@ -2,7 +2,8 @@ import os, sqlite3, smtplib, ssl, secrets
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask import Flask, request, redirect, url_for, session, send_from_directory, Markup
+from flask import Flask, request, redirect, url_for, session, send_from_directory
+from markupsafe import Markup
 from flask import render_template_string
 from werkzeug.utils import secure_filename
 
