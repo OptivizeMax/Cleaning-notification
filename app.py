@@ -21,9 +21,6 @@ ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "changeme")
 FLASK_SECRET = os.getenv("FLASK_SECRET", secrets.token_hex(16))
 
 app = Flask(__name__)
-@app.route("/health")
-def health():
-    return "ok", 200
 app.secret_key = FLASK_SECRET
 
 DB_PATH = "data.sqlite3"
