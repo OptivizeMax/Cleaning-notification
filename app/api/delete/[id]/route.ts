@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getIronSession } from 'iron-session';
+import { getIronSession } from 'iron-session/edge';
 import { sessionOptions, SessionData } from '../../../../lib/auth';
 import { prisma } from '../../../../lib/db';
 

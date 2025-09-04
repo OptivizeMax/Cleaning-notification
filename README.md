@@ -26,7 +26,7 @@ Visit `http://localhost:3000` for the feed and `http://localhost:3000/admin` for
 4. Add environment variables from `.env.example` in Render dashboard.
 
 ## Environment Variables
-See `.env.example` for required variables like `ADMIN_PASSWORD`, SMTP or Resend settings, and `DATABASE_URL`.
+See `.env.example` for required variables like `ADMIN_PASSWORD`, a long `SESSION_PASSWORD` for cookie encryption, SMTP or Resend settings, and `DATABASE_URL`.
 
 ## Python
 
