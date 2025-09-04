@@ -171,3 +171,11 @@ def post():
 # --------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    @app.route("/delete/<int:post_id>", methods=["POST"])
+def delete(post_id):
+    if not session.get("authed"):
+        return redirect(url_for("admin"))
+    with db() as conn:
+        conn.execute("DELETE FROM posts WHERE id = ?", (post_id,))
+        conn.commit()
+    return redirect(url_for("admin"))
