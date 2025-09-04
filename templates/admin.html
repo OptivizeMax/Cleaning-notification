@@ -1,51 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
   {% if not authed %}
-    <div class="card">
-      <div class="title">Admin Login</div>
+    <section class="card" style="max-width:560px;margin:0 auto">
+      <div class="card-title">Admin Login</div>
       <form method="post">
         <label>Password</label>
         <input type="password" name="password" required />
-        <div class="sep"></div>
-        <button class="btn">Login</button>
+        <div class="actions">
+          <button class="btn">Login</button>
+        </div>
       </form>
-    </div>
+    </section>
   {% else %}
-    <div class="card">
-      <div class="title">New Cleaning Update</div>
-      <form method="post" action="{{ url_for('post') }}" enctype="multipart/form-data" class="grid">
-        <div>
+    <div class="main-grid">
+      <section class="card">
+        <div class="card-title">New Cleaning Update</div>
+        <div class="card-sub">Add a title, notes, and an optional photo.</div>
+        <div class="hr"></div>
+        <form method="post" action="{{ url_for('post') }}" enctype="multipart/form-data">
           <label>Title</label>
           <input type="text" name="title" placeholder="e.g., Microwave deep-cleaned" required />
-        </div>
-        <div>
+
           <label>Optional Photo</label>
           <input type="file" name="photo" accept="image/*" />
-        </div>
-        <div class="grid">
+
           <label>Details</label>
           <textarea name="body" placeholder="What did you clean? Any before/after notes?" required></textarea>
-        </div>
-        <button class="btn">Publish & Notify</button>
-      </form>
-    </div>
 
-    <div class="card">
-      <div class="title">Recent Posts</div>
-      {% for p in posts %}
-        <div class="muted">
-          {{ p['created_at'] }} — {{ p['title'] }}
-          <form method="post" action="{{ url_for('delete', post_id=p['id']) }}" style="display:inline;">
-            <button class="btn" style="background:#f87171;">Delete</button>
-          </form>
-        </div>
-      {% else %}
-        <div class="muted">No posts yet.</div>
-      {% endfor %}
-      <div class="sep"></div>
-      <form method="post" action="{{ url_for('logout') }}">
-        <button class="btn" style="background:#fda4af;">Logout</button>
-      </form>
+          <div class="actions">
+            <button class="btn">Publish & Notify</button>
+            <a class="btn secondary" href="{{ url_for('index') }}">View Feed</a>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card">
+        <div class="card-title">Recent Posts</div>
+        <div class="card-sub">Delete any mistakes below.</div>
+        <div class="hr"></div>
+        {% for p in posts %}
+          <div class="post">
+            <div class="meta">{{ p['created_at'] }}</div>
+            <div class="title">{{ p['title'] }}</div>
+            <form method="post" action="{{ url_for('delete', post_id=p['id']) }}" onsubmit="return confirm('Delete this post?');">
+              <button class="btn danger">Delete</button>
+            </form>
+          </div>
+          {% if not loop.last %}<div class="hr"></div>{% endif %}
+        {% else %}
+          <div class="card-sub">No posts yet.</div>
+        {% endfor %}
+
+        <div class="hr"></div>
+        <form method="post" action="{{ url_for('logout') }}">
+          <button class="btn secondary">Logout</button>
+        </form>
+      </aside>
     </div>
   {% endif %}
 {% endblock %}
