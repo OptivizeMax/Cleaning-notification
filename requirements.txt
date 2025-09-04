@@ -1,1 +1,1 @@
-# Project uses Node.js; no Python dependencies required
+# Placeholder for compatibility; this Node.js project has no Python dependencies
