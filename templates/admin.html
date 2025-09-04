@@ -29,10 +29,16 @@
         <button class="btn">Publish & Notify</button>
       </form>
     </div>
+
     <div class="card">
       <div class="title">Recent Posts</div>
       {% for p in posts %}
-        <div class="muted">{{ p['created_at'] }} — {{ p['title'] }}</div>
+        <div class="muted">
+          {{ p['created_at'] }} — {{ p['title'] }}
+          <form method="post" action="{{ url_for('delete', post_id=p['id']) }}" style="display:inline;">
+            <button class="btn" style="background:#f87171;">Delete</button>
+          </form>
+        </div>
       {% else %}
         <div class="muted">No posts yet.</div>
       {% endfor %}
@@ -43,13 +49,3 @@
     </div>
   {% endif %}
 {% endblock %}
-{% for p in posts %}
-  <div class="muted">
-    {{ p['created_at'] }} — {{ p['title'] }}
-    <form method="post" action="{{ url_for('delete', post_id=p['id']) }}" style="display:inline;">
-      <button class="btn" style="background:#f87171;">Delete</button>
-    </form>
-  </div>
-{% else %}
-  <div class="muted">No posts yet.</div>
-{% endfor %}
