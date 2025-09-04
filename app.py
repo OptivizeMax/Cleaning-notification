@@ -60,7 +60,6 @@ init_db()
 # --------------------------
 def notify_clients(title, body, link):
     if not CLIENT_EMAILS or not SMTP_HOST or not SMTP_USER or not SMTP_PASS:
-        # Email not configured; skip silently
         return False, "Email not configured"
     try:
         msg = MIMEMultipart("alternative")
@@ -83,7 +82,7 @@ def notify_clients(title, body, link):
         return False, str(e)
 
 # --------------------------
-# Health check (so Render doesn't hit "/")
+# Health check
 # --------------------------
 @app.route("/health")
 def health():
@@ -96,7 +95,7 @@ def health():
 def index():
     with db() as conn:
         rows = conn.execute("SELECT * FROM posts ORDER BY id DESC").fetchall()
-    posts = [dict(r) for r in rows]   # templates will handle newline-><br>
+    posts = [dict(r) for r in rows]
     return render_template(
         "index.html",
         posts=posts,
@@ -106,7 +105,6 @@ def index():
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
-    # Login
     if request.method == "POST" and not session.get("authed"):
         if request.form.get("password") == ADMIN_PASSWORD:
             session["authed"] = True
@@ -161,8 +159,26 @@ def post():
         )
         conn.commit()
 
-    # Will no-op if email not configured
     notify_clients(title, body, BASE_URL)
+    return redirect(url_for("admin"))
+
+@app.route("/delete/<int:post_id>", methods=["POST"])
+def delete(post_id):
+    if not session.get("authed"):
+        return redirect(url_for("admin"))
+
+    # Look up image path to optionally remove file
+    with db() as conn:
+        row = conn.execute("SELECT image_path FROM posts WHERE id = ?", (post_id,)).fetchone()
+        if row and row["image_path"]:
+            file_path = os.path.join("static", row["image_path"])
+            if os.path.exists(file_path):
+                try:
+                    os.remove(file_path)
+                except Exception:
+                    pass
+        conn.execute("DELETE FROM posts WHERE id = ?", (post_id,))
+        conn.commit()
 
     return redirect(url_for("admin"))
 
@@ -171,11 +187,3 @@ def post():
 # --------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-    @app.route("/delete/<int:post_id>", methods=["POST"])
-def delete(post_id):
-    if not session.get("authed"):
-        return redirect(url_for("admin"))
-    with db() as conn:
-        conn.execute("DELETE FROM posts WHERE id = ?", (post_id,))
-        conn.commit()
-    return redirect(url_for("admin"))
