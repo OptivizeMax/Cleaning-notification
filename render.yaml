@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: cleaning-updates
+    env: node
+    buildCommand: npm install && npx prisma migrate deploy && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: cleaning-db
