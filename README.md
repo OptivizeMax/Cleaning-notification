@@ -1,21 +1,29 @@
-# Cleaning Updates Site
+# Cleaning Updates Site (Next.js)
 
-A tiny website to post your daily cleaning updates. When you publish a post, an email notification is sent to your client automatically.
+A Next.js app to post daily cleaning updates and notify clients by email.
 
 ## Features
-- Public feed at `/` (mobile-friendly)
-- Simple admin page at `/admin` with password
-- Add a title, description, and optional photo
-- Stores posts in a local SQLite DB
-- Sends an email per new post via SMTP
-
----
+- Public feed at `/` showing posts.
+- Admin page at `/admin` with password login.
+- Add title, description, optional photo and send email notifications.
+- Stores posts in SQLite via Prisma.
 
 ## Quick Start (Local)
-1. **Install Python 3.11+** and **pip**.
-2. Clone the repo and open a terminal in this folder:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate   # Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   cp .env.example .env
+```bash
+npm install
+cp .env.example .env
+npx prisma migrate dev --name init
+npx prisma db seed
+npm run dev
+```
+
+Visit `http://localhost:3000` for the feed and `http://localhost:3000/admin` for admin.
+
+## Deploy to Render
+1. Create a new Web Service from this repo.
+2. Set build command: `npm install && npx prisma migrate deploy && npm run build`.
+3. Set start command: `npm start`.
+4. Add environment variables from `.env.example` in Render dashboard.
+
+## Environment Variables
+See `.env.example` for required variables like `ADMIN_PASSWORD`, SMTP or Resend settings, and `DATABASE_URL`.
